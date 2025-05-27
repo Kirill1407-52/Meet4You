@@ -29,38 +29,59 @@ const UserGrid: React.FC<UserGridProps> = ({ users, onEdit, onDelete }) => {
                         flexDirection: "column",
                         alignItems: "center",
                         position: "relative",
+                        height: "100%",
                     }}
                 >
+                    {/* Контейнер для основного контента */}
                     <div
                         style={{
-                            width: "100px",
-                            height: "100px",
-                            borderRadius: "50%",
-                            backgroundColor: "#eee",
                             display: "flex",
-                            justifyContent: "center",
+                            flexDirection: "column",
                             alignItems: "center",
-                            fontSize: "36px",
-                            color: "#888",
-                            marginBottom: "10px",
-                            userSelect: "none",
+                            justifyContent: "center",
+                            flex: 1,
+                            width: "100%",
                         }}
                     >
-                        {user.name.charAt(0).toUpperCase()}
-                    </div>
-                    <h3 style={{ margin: "0 0 8px 0" }}>{user.name}</h3>
-                    <p style={{ margin: "0", fontSize: "14px", color: "#555" }}>{user.email}</p>
-                    <p style={{ margin: "5px 0 0 0", fontSize: "13px", color: "#999" }}>
-                        Возраст: {user.age ?? "-"}
-                    </p>
-
-                    {user.interests && user.interests.length > 0 && (
-                        <p style={{ marginTop: "10px", fontSize: "13px", color: "#444" }}>
-                            Интересы: {user.interests.map((i) => i.interestType).join(", ")}
+                        <div
+                            style={{
+                                width: "100px",
+                                height: "100px",
+                                borderRadius: "50%",
+                                backgroundColor: "#eee",
+                                display: "flex",
+                                justifyContent: "center",
+                                alignItems: "center",
+                                fontSize: "36px",
+                                color: "#888",
+                                marginBottom: "10px",
+                                userSelect: "none",
+                            }}
+                        >
+                            {user.name.charAt(0).toUpperCase()}
+                        </div>
+                        <h3 style={{ margin: "0 0 8px 0", textAlign: "center" }}>{user.name}</h3>
+                        <p style={{ margin: "0", fontSize: "14px", color: "#555", textAlign: "center" }}>
+                            {user.email}
                         </p>
-                    )}
+                        <p style={{ margin: "5px 0 0 0", fontSize: "13px", color: "#999", textAlign: "center" }}>
+                            Возраст: {user.age ?? "-"}
+                        </p>
 
-                    {/* Добавляем кнопки снизу */}
+                        {user.interests && user.interests.length > 0 && (
+                            <p
+                                style={{
+                                    marginTop: "10px",
+                                    fontSize: "13px",
+                                    color: "#444",
+                                    textAlign: "center",
+                                }}
+                            >
+                                Интересы: {user.interests.map((i) => i.interestType).join(", ")}
+                            </p>
+                        )}
+                    </div>
+                    {/* Кнопки действий */}
                     <div
                         style={{
                             marginTop: "15px",
@@ -78,7 +99,7 @@ const UserGrid: React.FC<UserGridProps> = ({ users, onEdit, onDelete }) => {
                                 cursor: "pointer",
                                 fontSize: "18px",
                             }}
-                            aria-label={`Редактировать пользователя ${user.name}`}
+                            aria-label={'Редактировать пользователя ${user.name}'}
                         >
                             ✏️
                         </button>
@@ -92,9 +113,9 @@ const UserGrid: React.FC<UserGridProps> = ({ users, onEdit, onDelete }) => {
                                 fontSize: "18px",
                                 color: "red",
                             }}
-                            aria-label={`Удалить пользователя ${user.name}`}
+                            aria-label={'Удалить пользователя ${user.name}'}
                         >
-                            🗑️
+                            🗑
                         </button>
                     </div>
                 </div>

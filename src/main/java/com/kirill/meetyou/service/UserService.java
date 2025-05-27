@@ -6,17 +6,16 @@ import com.kirill.meetyou.dto.UserCreateDto;
 import com.kirill.meetyou.dto.UserUpdateDto;
 import com.kirill.meetyou.model.User;
 import com.kirill.meetyou.repository.UserRepository;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
-
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 @Slf4j
 @Service
@@ -35,7 +34,8 @@ public class UserService {
             return userRepository.findAll();
         } catch (Exception e) {
             log.error("Failed to fetch all users. Error: {}", e.getMessage(), e);
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Ошибка при получении пользователей");
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Ошибка"
+                    + " при получении пользователей");
         }
     }
 
@@ -43,7 +43,8 @@ public class UserService {
         try {
             if (id == null || id <= 0) {
                 log.warn("Invalid user ID requested: {}", id);
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Некорректный ID пользователя");
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Некорректный"
+                        + " ID пользователя");
             }
 
             User cachedUser = cache.get(id);
@@ -57,7 +58,8 @@ public class UserService {
             return userOptional;
         } catch (Exception e) {
             log.error("Failed to find user with ID: {}. Error: {}", id, e.getMessage(), e);
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Ошибка при поиске пользователя");
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Ошибка"
+                    + " при поиске пользователя");
         }
     }
 
@@ -71,7 +73,8 @@ public class UserService {
             return savedUser;
         } catch (Exception e) {
             log.error("Failed to create user. Error: {}", e.getMessage(), e);
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Ошибка при создании пользователя");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Ошибка"
+                    + " при создании пользователя");
         }
     }
 
@@ -86,7 +89,8 @@ public class UserService {
             cache.remove(id);
         } catch (Exception e) {
             log.error("Failed to delete user. Error: {}", e.getMessage(), e);
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Ошибка при удалении пользователя");
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Ошибка"
+                    + " при удалении пользователя");
         }
     }
 
@@ -96,21 +100,25 @@ public class UserService {
             validateUserId(id);
 
             User user = userRepository.findById(id)
-                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Пользователь не найден"));
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, ""
+                            + "Пользователь"
+                            + " не найден"));
 
             if (dto.getEmail() != null && !dto.getEmail().trim().equals(user.getEmail())) {
                 if (dto.getEmail().trim().isEmpty() || dto.getEmail().equalsIgnoreCase("null")) {
                     throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Некорректный email");
                 }
                 if (userRepository.findByEmail(dto.getEmail()).isPresent()) {
-                    throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email уже используется");
+                    throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email"
+                            + " уже используется");
                 }
                 user.setEmail(dto.getEmail().trim());
             }
 
             if (dto.getName() != null) {
                 if (dto.getName().trim().isEmpty()) {
-                    throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Имя не может быть пустым");
+                    throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Имя"
+                            + " не может быть пустым");
                 }
                 user.setName(dto.getName().trim());
             }
@@ -119,8 +127,10 @@ public class UserService {
             cache.put(id, updatedUser);
             return updatedUser;
         } catch (Exception e) {
-            log.error("Failed to update user. Error: {}", e.getMessage(), e);
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Ошибка при обновлении пользователя");
+            log.error("Failed to update"
+                    + " user. Error: {}", e.getMessage(), e);
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,
+                    "Ошибка при обновлении пользователя");
         }
     }
 
@@ -132,7 +142,8 @@ public class UserService {
                 .errors(new ArrayList<>());
 
         if (userDtos == null || userDtos.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Список пользователей не может быть пустым");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Список"
+                    + " пользователей не может быть пустым");
         }
 
         for (UserCreateDto dto : userDtos) {
@@ -149,7 +160,8 @@ public class UserService {
                 response.successCount(response.build().getSuccessCount() + 1);
             } catch (Exception e) {
                 response.failCount(response.build().getFailCount() + 1);
-                response.errors(List.of("Ошибка для email " + dto.getEmail() + ": " + e.getMessage()));
+                response.errors(List.of("Ошибка для email "
+                        + dto.getEmail() + ": " + e.getMessage()));
             }
         }
 
@@ -160,7 +172,8 @@ public class UserService {
 
     private void validateUserForCreation(User user) {
         if (user == null) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Пользователь не может быть null");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "Пользователь не может быть null");
         }
 
         if (user.getEmail() == null || user.getEmail().trim().isEmpty()
@@ -169,7 +182,8 @@ public class UserService {
         }
 
         if (userRepository.findByEmail(user.getEmail()).isPresent()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Пользователь с таким email уже существует");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "Пользователь с таким email уже существует");
         }
 
         if (user.getName() == null || user.getName().trim().isEmpty()) {
@@ -183,7 +197,8 @@ public class UserService {
 
     private void validateUserId(Long id) {
         if (id == null || id <= 0) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Некорректный ID пользователя");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "Некорректный ID пользователя");
         }
     }
 }

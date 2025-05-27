@@ -34,8 +34,12 @@ public class InterestService {
         validateInterestName(interestType);
         User user = getUserById(userId);
 
-        Interest interest = interestRepository.findByInterestType(interestType)
+        Interest interest = interestRepository.findByInterestTypeIgnoreCase(interestType)
                 .orElseGet(() -> createNewInterest(interestType));
+
+        // Проверка на существование интереса у пользователя (без учета регистра)
+        boolean interestExists = user.getInterests().stream()
+                .anyMatch(i -> i.getInterestType().equalsIgnoreCase(interestType));
 
         if (user.getInterests().contains(interest)) {
             log.warn("Попытка добавить существующий интерес: {}", interestType);
@@ -56,7 +60,7 @@ public class InterestService {
 
         validateInterestName(interestName);
         User user = getUserById(userId);
-        Interest interest = getInterestByName(interestName);
+        Interest interest = getInterestByNameIgnoreCase(interestName);
 
         if (!user.getInterests().contains(interest)) {
             log.warn("Попытка удалить отсутствующий интерес: {}", interestName);
@@ -76,16 +80,18 @@ public class InterestService {
         validateInterestName(updatedInterest.getInterestType());
         User user = getUserById(userId);
         Interest existingInterest = interestRepository.findById(interestId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, INTEREST_NOT_FOUND));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+                        INTEREST_NOT_FOUND));
 
         // Проверка, что этот интерес привязан к пользователю
         if (!user.getInterests().contains(existingInterest)) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Интерес не принадлежит пользователю");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Интерес"
+                    + " не принадлежит пользователю");
         }
 
         // Проверка, не используется ли новое имя другим интересом
-        if (interestRepository.existsByInterestType(updatedInterest.getInterestType()) &&
-                !existingInterest.getInterestType().equals(updatedInterest.getInterestType())) {
+        if (interestRepository.existsByInterestType(updatedInterest.getInterestType())
+                && !existingInterest.getInterestType().equals(updatedInterest.getInterestType())) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, INTEREST_ALREADY_EXISTS);
         }
 
@@ -99,10 +105,12 @@ public class InterestService {
         User user = getUserById(userId);
 
         Interest oldInterest = interestRepository.findById(interestId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, INTEREST_NOT_FOUND));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+                        INTEREST_NOT_FOUND));
 
         if (!user.getInterests().contains(oldInterest)) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Интерес не принадлежит пользователю");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Интерес"
+                    + " не принадлежит пользователю");
         }
 
         // Удаляем старый интерес у пользователя
@@ -134,16 +142,18 @@ public class InterestService {
                 });
     }
 
-    private Interest getInterestByName(String interestName) {
-        return interestRepository.findByInterestType(interestName)
+    // В InterestService.java добавить новый метод для поиска интереса без учета регистра
+    private Interest getInterestByNameIgnoreCase(String interestName) {
+        return interestRepository.findByInterestTypeIgnoreCase(interestName)
                 .orElseThrow(() -> {
                     log.warn(INTEREST_NOT_FOUND + ": {}", interestName);
                     return new ResponseStatusException(HttpStatus.NOT_FOUND, INTEREST_NOT_FOUND);
                 });
     }
 
+    // И обновить метод createNewInterest, чтобы проверял существование интереса без учета регистра
     private Interest createNewInterest(String interestType) {
-        if (interestRepository.existsByInterestType(interestType)) {
+        if (interestRepository.existsByInterestTypeIgnoreCase(interestType)) {
             log.warn(INTEREST_ALREADY_EXISTS + ": {}", interestType);
             throw new ResponseStatusException(HttpStatus.CONFLICT, INTEREST_ALREADY_EXISTS);
         }

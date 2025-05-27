@@ -42,11 +42,11 @@ const SearchPage: React.FC = () => {
             let res;
             const interestList = query
                 .split(",")
-                .map((s) => s.trim())
+                .map((s) => s.trim().toLowerCase()) // Нормализуем регистр
                 .filter(Boolean);
 
             if (mode === "one") {
-                res = await searchByInterest(query.trim());
+                res = await searchByInterest(interestList[0]); // Берем первый элемент
             } else if (mode === "all") {
                 res = await searchByAllInterests(interestList);
             } else {
