@@ -19,6 +19,12 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 public class MessageService {
+    // Error message constants
+    private static final String USER_NOT_FOUND_LOG = "❌ Пользователь не найден: ID {}";
+    private static final String USER_NOT_FOUND_MSG = "Пользователь не найден";
+    private static final String INTERLOCUTOR_NOT_FOUND_LOG = "❌ Собеседник не найден: ID {}";
+    private static final String INTERLOCUTOR_NOT_FOUND_MSG = "Собеседник не найден";
+
     private final MessageRepository messageRepository;
     private final UserRepository userRepository;
     private static final DateTimeFormatter TIMESTAMP_FORMATTER =
@@ -34,18 +40,16 @@ public class MessageService {
             throw new IllegalArgumentException("Текст сообщения не может быть пустым");
         }
 
-        User sender;
-        sender = userRepository.findById(senderId)
+        User sender = userRepository.findById(senderId)
                 .orElseThrow(() -> {
-                    log.error("❌ Отправитель не найден: ID {}", senderId);
-                    return new ResourceNotFoundException("Отправитель не найден");
+                    log.error(USER_NOT_FOUND_LOG, senderId);
+                    return new ResourceNotFoundException(USER_NOT_FOUND_MSG);
                 });
 
-        User receiver;
-        receiver = userRepository.findById(receiverId)
+        User receiver = userRepository.findById(receiverId)
                 .orElseThrow(() -> {
-                    log.error("❌ Получатель не найден: ID {}", receiverId);
-                    return new ResourceNotFoundException("Получатель не найден");
+                    log.error(INTERLOCUTOR_NOT_FOUND_LOG, receiverId);
+                    return new ResourceNotFoundException(INTERLOCUTOR_NOT_FOUND_MSG);
                 });
 
         if (senderId.equals(receiverId)) {
@@ -77,23 +81,23 @@ public class MessageService {
 
         User user1 = userRepository.findById(user1Id)
                 .orElseThrow(() -> {
-                    log.error("❌ Пользователь не найден: ID {}", user1Id);
-                    return new ResourceNotFoundException("Пользователь не найден");
+                    log.error(USER_NOT_FOUND_LOG, user1Id);
+                    return new ResourceNotFoundException(USER_NOT_FOUND_MSG);
                 });
 
         User user2 = userRepository.findById(user2Id)
                 .orElseThrow(() -> {
-                    log.error("❌ Пользователь не найден: ID {}", user2Id);
-                    return new ResourceNotFoundException("Пользователь не найден");
+                    log.error(USER_NOT_FOUND_LOG, user2Id);
+                    return new ResourceNotFoundException(USER_NOT_FOUND_MSG);
                 });
 
         List<MessageDto> conversation = messageRepository.findConversation(user1, user2).stream()
                 .map(this::convertToDto)
-                .collect(Collectors.toList());
+                .toList();
 
         log.info("📊 Найдено {} сообщений в переписке", conversation.size());
         log.debug("Первые 3 сообщения: {}",
-                conversation.stream().limit(3).collect(Collectors.toList()));
+                conversation.stream().limit(3).toList());
 
         return conversation;
     }
@@ -105,14 +109,14 @@ public class MessageService {
 
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> {
-                    log.error("❌ Пользователь не найден: ID {}", userId);
-                    return new ResourceNotFoundException("Пользователь не найден");
+                    log.error(USER_NOT_FOUND_LOG, userId);
+                    return new ResourceNotFoundException(USER_NOT_FOUND_MSG);
                 });
 
         User interlocutor = userRepository.findById(interlocutorId)
                 .orElseThrow(() -> {
-                    log.error("❌ Собеседник не найден: ID {}", interlocutorId);
-                    return new ResourceNotFoundException("Собеседник не найден");
+                    log.error(INTERLOCUTOR_NOT_FOUND_LOG, interlocutorId);
+                    return new ResourceNotFoundException(INTERLOCUTOR_NOT_FOUND_MSG);
                 });
 
         List<Message> unreadMessages =
@@ -135,8 +139,8 @@ public class MessageService {
 
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> {
-                    log.error("❌ Пользователь не найден: ID {}", userId);
-                    return new ResourceNotFoundException("Пользователь не найден");
+                    log.error(USER_NOT_FOUND_LOG, userId);
+                    return new ResourceNotFoundException(USER_NOT_FOUND_MSG);
                 });
 
         long count = messageRepository.countByReceiverAndIsReadFalse(user);
