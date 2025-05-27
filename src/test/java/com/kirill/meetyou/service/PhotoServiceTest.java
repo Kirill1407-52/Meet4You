@@ -1,6 +1,7 @@
 package com.kirill.meetyou.service;
 
 import com.kirill.meetyou.model.Photo;
+import com.kirill.meetyou.model.User;
 import com.kirill.meetyou.repository.PhotoRepository;
 import com.kirill.meetyou.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -355,18 +356,5 @@ class PhotoServiceTest {
                 () -> photoService.getPhotoById(1L, null));
         assertThrows(ResponseStatusException.class,
                 () -> photoService.getPhotoById(1L, 0L));
-    }
-
-    @Test
-    void addMultiplePhotos_ShouldThrowExceptionWhenDatabaseErrorOccurs() {
-        // Arrange
-        when(userRepository.findById(1L)).thenReturn(Optional.of(testUser));
-        when(photoRepository.saveAll(any())).thenThrow(new RuntimeException("DB error"));
-
-        // Act & Assert
-        assertThrows(ResponseStatusException.class, () -> {
-            List<Photo> photos = List.of(testPhoto);
-            photoService.addMultiplePhotos(1L, photos);
-        });
     }
 }

@@ -23897,3 +23897,187 @@ Caused by: java.net.BindException: Адрес уже используется
             on i1_1.id=i1_0.interest_id 
     where
         i1_0.user_id=?
+2025-05-27 13:49:33.835 INFO  [http-nio-8080-exec-4] c.k.meetyou.aspect.LoggingAspect - [GET] /api/users - ResponseEntity com.kirill.meetyou.controller.UserController.findAll()
+2025-05-27 13:49:34.048 DEBUG [http-nio-8080-exec-4] org.hibernate.SQL - 
+    select
+        u1_0.id,
+        u1_0.age,
+        u1_0.birth,
+        u1_0.email,
+        u1_0.name 
+    from
+        users u1_0
+2025-05-27 13:49:34.090 DEBUG [http-nio-8080-exec-4] org.hibernate.SQL - 
+    select
+        b1_0.id,
+        b1_0.interest_fact,
+        b1_0.user_id,
+        b1_0.bio 
+    from
+        bio b1_0 
+    where
+        b1_0.user_id=?
+2025-05-27 13:49:34.115 DEBUG [http-nio-8080-exec-4] org.hibernate.SQL - 
+    select
+        b1_0.id,
+        b1_0.interest_fact,
+        b1_0.user_id,
+        b1_0.bio 
+    from
+        bio b1_0 
+    where
+        b1_0.user_id=?
+2025-05-27 13:49:34.121 DEBUG [http-nio-8080-exec-4] org.hibernate.SQL - 
+    select
+        b1_0.id,
+        b1_0.interest_fact,
+        b1_0.user_id,
+        b1_0.bio 
+    from
+        bio b1_0 
+    where
+        b1_0.user_id=?
+2025-05-27 13:49:34.127 DEBUG [http-nio-8080-exec-4] org.hibernate.SQL - 
+    select
+        b1_0.id,
+        b1_0.interest_fact,
+        b1_0.user_id,
+        b1_0.bio 
+    from
+        bio b1_0 
+    where
+        b1_0.user_id=?
+2025-05-27 13:49:34.247 DEBUG [http-nio-8080-exec-4] org.hibernate.SQL - 
+    select
+        i1_0.user_id,
+        i1_1.id,
+        i1_1.interest_type 
+    from
+        user_interest i1_0 
+    join
+        interests i1_1 
+            on i1_1.id=i1_0.interest_id 
+    where
+        i1_0.user_id=?
+2025-05-27 13:49:34.259 DEBUG [http-nio-8080-exec-4] org.hibernate.SQL - 
+    select
+        i1_0.user_id,
+        i1_1.id,
+        i1_1.interest_type 
+    from
+        user_interest i1_0 
+    join
+        interests i1_1 
+            on i1_1.id=i1_0.interest_id 
+    where
+        i1_0.user_id=?
+2025-05-27 13:49:34.263 DEBUG [http-nio-8080-exec-4] org.hibernate.SQL - 
+    select
+        i1_0.user_id,
+        i1_1.id,
+        i1_1.interest_type 
+    from
+        user_interest i1_0 
+    join
+        interests i1_1 
+            on i1_1.id=i1_0.interest_id 
+    where
+        i1_0.user_id=?
+2025-05-27 13:49:34.267 DEBUG [http-nio-8080-exec-4] org.hibernate.SQL - 
+    select
+        i1_0.user_id,
+        i1_1.id,
+        i1_1.interest_type 
+    from
+        user_interest i1_0 
+    join
+        interests i1_1 
+            on i1_1.id=i1_0.interest_id 
+    where
+        i1_0.user_id=?
+2025-05-27 13:49:51.941 INFO  [http-nio-8080-exec-5] c.k.meetyou.aspect.LoggingAspect - [GET] /api/users/by-interest - ResponseEntity com.kirill.meetyou.controller.UserController.getUsersByInterest(String)
+2025-05-27 13:49:51.979 DEBUG [http-nio-8080-exec-5] org.hibernate.SQL - 
+    select
+        distinct u1_0.id,
+        u1_0.age,
+        u1_0.birth,
+        u1_0.email,
+        u1_0.name 
+    from
+        users u1_0 
+    join
+        user_interest i1_0 
+            on u1_0.id=i1_0.user_id 
+    join
+        interests i1_1 
+            on i1_1.id=i1_0.interest_id 
+    where
+        lower(i1_1.interest_type)=lower(?)
+2025-05-27 13:49:57.028 INFO  [http-nio-8080-exec-6] c.k.meetyou.aspect.LoggingAspect - [GET] /api/users/by-interest - ResponseEntity com.kirill.meetyou.controller.UserController.getUsersByInterest(String)
+2025-05-27 13:49:57.033 DEBUG [http-nio-8080-exec-6] org.hibernate.SQL - 
+    select
+        distinct u1_0.id,
+        u1_0.age,
+        u1_0.birth,
+        u1_0.email,
+        u1_0.name 
+    from
+        users u1_0 
+    join
+        user_interest i1_0 
+            on u1_0.id=i1_0.user_id 
+    join
+        interests i1_1 
+            on i1_1.id=i1_0.interest_id 
+    where
+        lower(i1_1.interest_type)=lower(?)
+2025-05-27 13:49:57.044 DEBUG [http-nio-8080-exec-6] org.hibernate.SQL - 
+    select
+        b1_0.id,
+        b1_0.interest_fact,
+        b1_0.user_id,
+        b1_0.bio 
+    from
+        bio b1_0 
+    where
+        b1_0.user_id=?
+2025-05-27 13:49:57.047 DEBUG [http-nio-8080-exec-6] org.hibernate.SQL - 
+    select
+        b1_0.id,
+        b1_0.interest_fact,
+        b1_0.user_id,
+        b1_0.bio 
+    from
+        bio b1_0 
+    where
+        b1_0.user_id=?
+2025-05-27 13:49:57.050 DEBUG [http-nio-8080-exec-6] org.hibernate.SQL - 
+    select
+        i1_0.user_id,
+        i1_1.id,
+        i1_1.interest_type 
+    from
+        user_interest i1_0 
+    join
+        interests i1_1 
+            on i1_1.id=i1_0.interest_id 
+    where
+        i1_0.user_id=?
+2025-05-27 13:49:57.054 DEBUG [http-nio-8080-exec-6] org.hibernate.SQL - 
+    select
+        i1_0.user_id,
+        i1_1.id,
+        i1_1.interest_type 
+    from
+        user_interest i1_0 
+    join
+        interests i1_1 
+            on i1_1.id=i1_0.interest_id 
+    where
+        i1_0.user_id=?
+2025-05-27 13:52:02.729 INFO  [SpringApplicationShutdownHook] o.s.b.w.e.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+2025-05-27 13:52:02.764 INFO  [tomcat-shutdown] o.s.b.w.e.tomcat.GracefulShutdown - Graceful shutdown complete
+2025-05-27 13:52:02.923 INFO  [SpringApplicationShutdownHook] o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-05-27 13:52:03.057 INFO  [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2025-05-27 13:52:03.159 INFO  [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2025-05-27 13:52:03.225 INFO  [SpringApplicationShutdownHook] c.k.m.filters.VisitCounterFilter - VisitCounterFilter destroyed

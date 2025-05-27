@@ -162,14 +162,36 @@ public class PhotoService {
     }
 
     private String saveFile(MultipartFile file) throws IOException {
-        String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
-        Path uploadPath = Paths.get(IMAGES_DIR);
+        String fileExtension = validateAndGetFileExtension(file.getOriginalFilename());
+
+        String fileName = UUID.randomUUID() + fileExtension;
+
+        Path uploadPath = Paths.get(IMAGES_DIR).normalize().toAbsolutePath();
+
         if (!Files.exists(uploadPath)) {
             Files.createDirectories(uploadPath);
         }
-        Path filePath = uploadPath.resolve(fileName);
+
+        Path filePath = uploadPath.resolve(fileName).normalize();
+        if (!filePath.startsWith(uploadPath)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid file path");
+        }
+
         Files.write(filePath, file.getBytes());
         return fileName;
+    }
+
+    private String validateAndGetFileExtension(String originalFilename) {
+        if (originalFilename == null || !originalFilename.contains(".")) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "File must have an extension");
+        }
+
+        String fileExtension = originalFilename.substring(originalFilename.lastIndexOf("."));
+        if (!fileExtension.matches("(?i)\\.(jpg|jpeg|png|gif|bmp)$")) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid file extension");
+        }
+
+        return fileExtension;
     }
 
     private void validateFile(MultipartFile file) {
