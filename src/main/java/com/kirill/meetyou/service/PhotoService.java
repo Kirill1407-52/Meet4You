@@ -125,7 +125,6 @@ public class PhotoService {
         }
 
         validateIsMainParameter(isMain);
-        User user = getUserOrThrow(userId);
 
         boolean hasMainPhoto = isMain != null && isMain.equals(TRUE_STRING);
         if (hasMainPhoto) {

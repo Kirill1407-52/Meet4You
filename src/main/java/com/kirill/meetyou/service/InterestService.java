@@ -37,10 +37,6 @@ public class InterestService {
         Interest interest = interestRepository.findByInterestTypeIgnoreCase(interestType)
                 .orElseGet(() -> createNewInterest(interestType));
 
-        // Проверка на существование интереса у пользователя (без учета регистра)
-        boolean interestExists = user.getInterests().stream()
-                .anyMatch(i -> i.getInterestType().equalsIgnoreCase(interestType));
-
         if (user.getInterests().contains(interest)) {
             log.warn("Попытка добавить существующий интерес: {}", interestType);
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
