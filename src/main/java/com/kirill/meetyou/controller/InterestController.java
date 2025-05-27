@@ -7,13 +7,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/users/{userId}/interests")
@@ -49,4 +43,16 @@ public class InterestController {
     public Set<Interest> getUserInterests(@PathVariable Long userId) {
         return interestService.getUserInterests(userId);
     }
+
+    @PutMapping("/{interestId}")
+    @Operation(summary = "Обновить интерес",
+            description = "Обновляет интерес пользователя")
+    @ApiResponse(responseCode = "200", description = "Интерес успешно обновлен")
+    public Interest updateInterest(
+            @PathVariable Long userId,
+            @PathVariable Long interestId,
+            @RequestBody Interest updatedInterest) {
+        return interestService.updateInterest(userId, interestId, updatedInterest);
+    }
+
 }

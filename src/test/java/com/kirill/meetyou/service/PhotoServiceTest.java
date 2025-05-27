@@ -1,7 +1,6 @@
 package com.kirill.meetyou.service;
 
 import com.kirill.meetyou.model.Photo;
-import com.kirill.meetyou.model.User;
 import com.kirill.meetyou.repository.PhotoRepository;
 import com.kirill.meetyou.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;

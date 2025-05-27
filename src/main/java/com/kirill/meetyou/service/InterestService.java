@@ -71,6 +71,55 @@ public class InterestService {
         log.info(String.format(INTEREST_REMOVED, interestName, userId));
     }
 
+    @Transactional
+    public Interest updateInterest(Long userId, Long interestId, Interest updatedInterest) {
+        validateInterestName(updatedInterest.getInterestType());
+        User user = getUserById(userId);
+        Interest existingInterest = interestRepository.findById(interestId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, INTEREST_NOT_FOUND));
+
+        // Проверка, что этот интерес привязан к пользователю
+        if (!user.getInterests().contains(existingInterest)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Интерес не принадлежит пользователю");
+        }
+
+        // Проверка, не используется ли новое имя другим интересом
+        if (interestRepository.existsByInterestType(updatedInterest.getInterestType()) &&
+                !existingInterest.getInterestType().equals(updatedInterest.getInterestType())) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, INTEREST_ALREADY_EXISTS);
+        }
+
+        existingInterest.setInterestType(updatedInterest.getInterestType().trim());
+        return interestRepository.save(existingInterest);
+    }
+
+    @Transactional
+    public void updateUserInterest(Long userId, Long interestId, String newInterestName) {
+        validateInterestName(newInterestName);
+        User user = getUserById(userId);
+
+        Interest oldInterest = interestRepository.findById(interestId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, INTEREST_NOT_FOUND));
+
+        if (!user.getInterests().contains(oldInterest)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Интерес не принадлежит пользователю");
+        }
+
+        // Удаляем старый интерес у пользователя
+        user.getInterests().remove(oldInterest);
+
+        // Ищем или создаем новый интерес
+        Interest newInterest = interestRepository.findByInterestType(newInterestName)
+                .orElseGet(() -> createNewInterest(newInterestName));
+
+        // Добавляем новый интерес пользователю
+        user.getInterests().add(newInterest);
+
+        userRepository.save(user);
+        userCache.put(userId, user);
+    }
+
+
     @Transactional(readOnly = true)
     public Set<Interest> getUserInterests(Long userId) {
         log.debug("Получение интересов пользователя {}", userId);

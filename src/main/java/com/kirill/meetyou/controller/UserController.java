@@ -2,6 +2,7 @@ package com.kirill.meetyou.controller;
 
 import com.kirill.meetyou.dto.BulkResponse;
 import com.kirill.meetyou.dto.UserCreateDto;
+import com.kirill.meetyou.dto.UserUpdateDto;
 import com.kirill.meetyou.model.User;
 import com.kirill.meetyou.repository.UserRepository;
 import com.kirill.meetyou.service.UserService;
@@ -84,15 +85,15 @@ public class UserController {
     @Operation(summary = "Обновить пользователя",
             description = "Обновляет информацию о пользователе (email и/или имя)")
     @ApiResponse(responseCode = "200", description = "Пользователь успешно обновлен")
-    @PutMapping(path = "{id}")
+    @PutMapping(path = "{id}", consumes = "application/json")
     public ResponseEntity<Void> update(
             @PathVariable Long id,
-            @RequestParam(required = false) String email,
-            @RequestParam(required = false) String name
+            @RequestBody UserUpdateDto dto
     ) {
-        userService.update(id, email, name);
+        userService.update(id, dto);
         return ResponseEntity.ok().build();
     }
+
 
     // Обновленные методы для работы с интересами (теперь через String)
     @Operation(summary = "Поиск по интересу",
@@ -113,7 +114,7 @@ public class UserController {
     })
     @GetMapping("/by-all-interests")
     public ResponseEntity<List<User>> getUsersByAllInterests(
-            @RequestParam Set<String> interestTypes) {
+            @RequestParam(required = false) Set<String> interestTypes) {
         if (interestTypes == null || interestTypes.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
                     "Не указаны интересы для поиска");

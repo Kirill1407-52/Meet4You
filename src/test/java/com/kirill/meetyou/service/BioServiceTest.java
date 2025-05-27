@@ -4,7 +4,6 @@ import com.kirill.meetyou.dto.BioDto;
 import com.kirill.meetyou.exception.ResourceAlreadyExistsException;
 import com.kirill.meetyou.exception.ResourceNotFoundException;
 import com.kirill.meetyou.model.Bio;
-import com.kirill.meetyou.model.User;
 import com.kirill.meetyou.repository.BioRepository;
 import com.kirill.meetyou.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;

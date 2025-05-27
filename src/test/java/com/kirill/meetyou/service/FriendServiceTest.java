@@ -1,6 +1,5 @@
 package com.kirill.meetyou.service;
 
-import com.kirill.meetyou.model.User;
 import com.kirill.meetyou.repository.FriendRepository;
 import com.kirill.meetyou.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;

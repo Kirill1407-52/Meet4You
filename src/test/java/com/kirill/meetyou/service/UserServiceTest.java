@@ -2,8 +2,6 @@ package com.kirill.meetyou.service;
 
 import com.kirill.meetyou.cache.UserCache;
 import com.kirill.meetyou.dto.BulkResponse;
-import com.kirill.meetyou.dto.UserCreateDto;
-import com.kirill.meetyou.model.User;
 import com.kirill.meetyou.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

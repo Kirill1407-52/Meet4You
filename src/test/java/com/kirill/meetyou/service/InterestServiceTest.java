@@ -2,7 +2,6 @@ package com.kirill.meetyou.service;
 
 import com.kirill.meetyou.cache.UserCache;
 import com.kirill.meetyou.model.Interest;
-import com.kirill.meetyou.model.User;
 import com.kirill.meetyou.repository.InterestRepository;
 import com.kirill.meetyou.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
